@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: scopus-cli
+Version: 0.1.0
+Summary: A command-line interface for the Elsevier Scopus API
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: click>=8.0
+Requires-Dist: requests>=2.28
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-mock>=3.10; extra == "dev"
+Requires-Dist: responses>=0.23; extra == "dev"
+
+# scopus-cli
+A cli for scopus

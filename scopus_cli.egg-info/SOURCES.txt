@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+scopus_cli/__init__.py
+scopus_cli/cli.py
+scopus_cli/client.py
+scopus_cli.egg-info/PKG-INFO
+scopus_cli.egg-info/SOURCES.txt
+scopus_cli.egg-info/dependency_links.txt
+scopus_cli.egg-info/entry_points.txt
+scopus_cli.egg-info/requires.txt
+scopus_cli.egg-info/top_level.txt
+tests/test_cli.py
+tests/test_client.py
