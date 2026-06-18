@@ -1,0 +1,17 @@
+# python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+
+# secrets — never commit the API key
+.env
+*.key
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
