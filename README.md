@@ -86,3 +86,37 @@ Sort with `--sort -citedby-count` (most cited) or `--sort -coverDate` (newest).
 ## License
 
 MIT.
+
+## Manual API smoke test
+
+After merging the workflow into `main`, open **Actions → Scopus API smoke test →
+Run workflow**, select `main`, and run it. The job uses `SCOPUS_API_KEY` from the
+existing GitHub environment named `search`. It never runs on pushes or pull requests.
+
+The probe uses the CLI's existing request/auth/JSON code for one fixed scholarly
+search, capped at five results, then one abstract retrieval using an identifier
+actually returned by that search. It does not paginate, retry, or follow redirects.
+Each response is capped at 1 MiB; requests have a 10-second socket timeout and a
+25-second shared time budget. A 35-second process deadline (plus at most 5 seconds
+to terminate) and a two-minute job timeout bound slow or stalled responses.
+
+Logs contain only a fixed JSON summary of boolean success/presence flags, numeric
+HTTP statuses, and the returned result count. Status `0` means no HTTP response was
+received. No keys, queries, identifiers, titles, abstracts, response bodies, or raw
+error messages are printed; no artifacts are uploaded.
+
+- `search_metadata_success: true` confirms a usable search response.
+- `abstract_metadata_success: true` with `abstract_present: false` confirms metadata
+  retrieval without abstract text. Entitlement can affect this; the flag alone
+  does not establish why text is absent.
+- `abstract_access_denied: true` records HTTP 401/403 for abstract retrieval and
+  fails the probe, while preserving the separate search success flag.
+- A genuinely empty search succeeds with `abstract_attempted: false`. Results
+  without a usable identifier, malformed responses, and other request failures
+  fail the probe without printing remote content.
+
+Run the network-mocked tests locally without a key:
+
+```bash
+python3 -m unittest discover -s tests -v
+```

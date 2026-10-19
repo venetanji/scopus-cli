@@ -1,0 +1,29 @@
+name: Scopus API smoke test
+
+'on':
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    environment: search
+    timeout-minutes: 2
+    steps:
+      - name: Check out trusted main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Run offline tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Run bounded API probe
+        env:
+          SCOPUS_API_KEY: ${{ secrets.SCOPUS_API_KEY }}
+        run: timeout --signal=TERM --kill-after=5s 35s python3 -m scopus_cli.smoke

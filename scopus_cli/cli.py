@@ -43,7 +43,7 @@ def _key(cli_key: str | None) -> str:
     return key
 
 
-def _get(path: str, params: dict | None, api_key: str) -> tuple[dict, dict]:
+def _get(path: str, params: dict | None, api_key: str, *, open_url=None) -> tuple[dict, dict]:
     """GET a Scopus endpoint, return (json_body, response_headers)."""
     url = BASE + path
     if params:
@@ -54,7 +54,7 @@ def _get(path: str, params: dict | None, api_key: str) -> tuple[dict, dict]:
         headers["X-ELS-Insttoken"] = insttoken
     req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with (open_url or urllib.request.urlopen)(req, timeout=30) as r:
             body = json.loads(r.read().decode("utf-8"))
             return body, dict(r.headers)
     except urllib.error.HTTPError as e:
